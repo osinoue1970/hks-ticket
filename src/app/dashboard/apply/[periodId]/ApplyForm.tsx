@@ -65,9 +65,7 @@ export default function ApplyForm({
   };
 
   const isSelected = (gameId: number) =>
-    gameId === firstChoice ||
-    gameId === secondChoice ||
-    gameId === thirdChoice;
+    gameId === firstChoice || gameId === secondChoice || gameId === thirdChoice;
 
   const getSelectionLabel = (gameId: number) => {
     if (gameId === firstChoice) return "第1希望";
@@ -77,52 +75,31 @@ export default function ApplyForm({
   };
 
   const handleSelect = (gameId: number) => {
-    if (gameId === firstChoice) {
-      setFirstChoice(null);
-      return;
-    }
-    if (gameId === secondChoice) {
-      setSecondChoice(null);
-      return;
-    }
-    if (gameId === thirdChoice) {
-      setThirdChoice(null);
-      return;
-    }
-
-    if (!firstChoice) {
-      setFirstChoice(gameId);
-    } else if (!secondChoice) {
-      setSecondChoice(gameId);
-    } else if (!thirdChoice) {
-      setThirdChoice(gameId);
-    }
+    if (gameId === firstChoice) { setFirstChoice(null); return; }
+    if (gameId === secondChoice) { setSecondChoice(null); return; }
+    if (gameId === thirdChoice) { setThirdChoice(null); return; }
+    if (!firstChoice) setFirstChoice(gameId);
+    else if (!secondChoice) setSecondChoice(gameId);
+    else if (!thirdChoice) setThirdChoice(gameId);
   };
 
   return (
     <div>
-      <div className="mb-6 flex gap-3 text-sm">
-        <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
-          第1希望:{" "}
-          {firstChoice
-            ? games.find((g) => g.id === firstChoice)?.opponent
-            : "未選択"}
+      {/* 選択状態 */}
+      <div className="mb-5 flex flex-col sm:flex-row gap-2 sm:gap-3 text-sm">
+        <span className="bg-blue-100 text-blue-700 px-3 py-2 sm:py-1 rounded-lg sm:rounded-full font-medium">
+          第1希望: {firstChoice ? games.find((g) => g.id === firstChoice)?.opponent : "未選択"}
         </span>
-        <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full">
-          第2希望:{" "}
-          {secondChoice
-            ? games.find((g) => g.id === secondChoice)?.opponent
-            : "未選択"}
+        <span className="bg-green-100 text-green-700 px-3 py-2 sm:py-1 rounded-lg sm:rounded-full font-medium">
+          第2希望: {secondChoice ? games.find((g) => g.id === secondChoice)?.opponent : "未選択"}
         </span>
-        <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full">
-          第3希望:{" "}
-          {thirdChoice
-            ? games.find((g) => g.id === thirdChoice)?.opponent
-            : "未選択"}
+        <span className="bg-orange-100 text-orange-700 px-3 py-2 sm:py-1 rounded-lg sm:rounded-full font-medium">
+          第3希望: {thirdChoice ? games.find((g) => g.id === thirdChoice)?.opponent : "未選択"}
         </span>
       </div>
 
-      <div className="grid gap-3">
+      {/* 試合一覧 */}
+      <div className="grid gap-2 sm:gap-3">
         {games.map((game) => {
           const selected = isSelected(game.id);
           const label = getSelectionLabel(game.id);
@@ -131,31 +108,29 @@ export default function ApplyForm({
             <button
               key={game.id}
               onClick={() => handleSelect(game.id)}
-              className={`p-4 rounded-xl border-2 text-left transition ${
+              className={`p-3 sm:p-4 rounded-xl border-2 text-left transition ${
                 selected
                   ? label === "第1希望"
                     ? "border-blue-500 bg-blue-50"
                     : label === "第2希望"
                     ? "border-green-500 bg-green-50"
                     : "border-orange-500 bg-orange-50"
-                  : "border-gray-200 bg-white hover:border-gray-300"
+                  : "border-gray-200 bg-white hover:border-gray-300 active:bg-gray-50"
               }`}
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="font-bold text-gray-800">
+              <div className="flex items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="font-bold text-gray-800 text-base">
                     {formatDate(game.date)} ({game.dayOfWeek})
-                  </span>
-                  <span className="ml-3 text-gray-600">
-                    vs {game.opponent}
-                  </span>
-                  <span className="ml-3 text-sm text-gray-400">
+                    <span className="ml-2 font-bold">vs {game.opponent}</span>
+                  </div>
+                  <div className="text-sm text-gray-400 mt-0.5">
                     {game.startTime}開始
-                  </span>
+                  </div>
                 </div>
                 {label && (
                   <span
-                    className={`text-xs font-bold px-3 py-1 rounded-full ${
+                    className={`shrink-0 text-xs font-bold px-3 py-1.5 rounded-full ${
                       label === "第1希望"
                         ? "bg-blue-600 text-white"
                         : label === "第2希望"
@@ -173,22 +148,23 @@ export default function ApplyForm({
       </div>
 
       {error && (
-        <div className="mt-4 bg-red-50 text-red-600 p-3 rounded-lg text-sm">
+        <div className="mt-4 bg-red-50 text-red-600 p-3 rounded-lg text-base">
           {error}
         </div>
       )}
 
-      <div className="mt-6 flex gap-3">
+      <div className="mt-6 flex flex-col sm:flex-row gap-3">
         <button
           onClick={handleSubmit}
           disabled={!firstChoice || loading}
-          className="bg-blue-700 hover:bg-blue-800 text-white font-medium px-8 py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="text-white font-bold text-base px-8 py-3.5 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+          style={{ background: "linear-gradient(135deg, #006098, #4bbfd4)" }}
         >
           {loading ? "送信中..." : "申し込む"}
         </button>
         <button
           onClick={() => router.push("/dashboard")}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg transition"
+          className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium px-6 py-3.5 rounded-xl transition"
         >
           戻る
         </button>

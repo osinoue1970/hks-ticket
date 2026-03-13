@@ -107,7 +107,7 @@ export default function EmployeeManager({
             {editingId ? "職員編集" : "職員追加"}
           </h3>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   職員番号

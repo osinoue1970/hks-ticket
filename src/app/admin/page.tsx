@@ -27,7 +27,7 @@ export default async function AdminPage() {
 
       <main className="max-w-6xl mx-auto px-4 py-8 space-y-8">
         {/* 概要 */}
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           {[
             { label: "職員数", value: employeeCount, color: "blue" },
             { label: "試合数", value: gameCount, color: "green" },
@@ -44,7 +44,7 @@ export default async function AdminPage() {
         </div>
 
         {/* クイックリンク */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Link
             href="/admin/employees"
             className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition"
@@ -68,47 +68,31 @@ export default async function AdminPage() {
         {/* 募集状況 */}
         <section>
           <h2 className="text-xl font-bold text-gray-800 mb-4">募集状況</h2>
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-            <table className="w-full">
+          <div className="bg-white rounded-xl shadow-sm overflow-x-auto">
+            <table className="w-full min-w-[400px]">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">
-                    月
-                  </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">
-                    受付状態
-                  </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">
-                    申込み数
-                  </th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500">
-                    抽選
-                  </th>
+                  <th className="px-3 sm:px-4 py-3 text-left text-sm font-medium text-gray-500">月</th>
+                  <th className="px-3 sm:px-4 py-3 text-left text-sm font-medium text-gray-500">受付</th>
+                  <th className="px-3 sm:px-4 py-3 text-left text-sm font-medium text-gray-500">申込み</th>
+                  <th className="px-3 sm:px-4 py-3 text-left text-sm font-medium text-gray-500">抽選</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 {periods.map((p) => (
                   <tr key={p.id}>
-                    <td className="px-4 py-3 font-medium">
-                      {p.year}年{p.month}月
-                    </td>
-                    <td className="px-4 py-3">
+                    <td className="px-3 sm:px-4 py-3 font-medium text-sm">{p.month}月</td>
+                    <td className="px-3 sm:px-4 py-3">
                       {p.isOpen ? (
-                        <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">
-                          受付中
-                        </span>
+                        <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">受付中</span>
                       ) : (
-                        <span className="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded-full">
-                          受付停止
-                        </span>
+                        <span className="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded-full">停止</span>
                       )}
                     </td>
-                    <td className="px-4 py-3">{p._count.applications}件</td>
-                    <td className="px-4 py-3">
+                    <td className="px-3 sm:px-4 py-3 text-sm">{p._count.applications}件</td>
+                    <td className="px-3 sm:px-4 py-3">
                       {p.isDrawn ? (
-                        <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">
-                          抽選済み
-                        </span>
+                        <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">済み</span>
                       ) : (
                         <span className="text-gray-400 text-xs">未実施</span>
                       )}
