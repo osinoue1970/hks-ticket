@@ -45,6 +45,7 @@ export default function PeriodManager({
 }) {
   const router = useRouter();
   const [lotteryLoading, setLotteryLoading] = useState<number | null>(null);
+  const [resetLoading, setResetLoading] = useState<number | null>(null);
   const [lotteryMessage, setLotteryMessage] = useState("");
 
   const formatDate = (dateStr: string) => {
@@ -84,6 +85,27 @@ export default function PeriodManager({
       setLotteryMessage("通信エラーが発生しました");
     } finally {
       setLotteryLoading(null);
+    }
+  };
+
+  const resetPeriod = async (periodId: number) => {
+    if (!confirm("この月の抽選結果と申込みをすべて削除してリセットしますか？")) return;
+    setResetLoading(periodId);
+    setLotteryMessage("");
+
+    try {
+      const res = await fetch(`/api/periods/${periodId}`, { method: "DELETE" });
+      const data = await res.json();
+      if (res.ok) {
+        setLotteryMessage("リセットしました。再度受付開始→申込み→抽選が可能です。");
+        router.refresh();
+      } else {
+        setLotteryMessage(`エラー: ${data.error}`);
+      }
+    } catch {
+      setLotteryMessage("通信エラーが発生しました");
+    } finally {
+      setResetLoading(null);
     }
   };
 
@@ -142,9 +164,18 @@ export default function PeriodManager({
                   </button>
                 )}
                 {period.isDrawn && (
-                  <span className="bg-blue-100 text-blue-700 text-sm px-4 py-2 rounded-lg">
-                    抽選済み
-                  </span>
+                  <>
+                    <span className="bg-blue-100 text-blue-700 text-sm px-4 py-2 rounded-lg">
+                      抽選済み
+                    </span>
+                    <button
+                      onClick={() => resetPeriod(period.id)}
+                      disabled={resetLoading === period.id}
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm px-4 py-2 rounded-lg transition disabled:opacity-50"
+                    >
+                      {resetLoading === period.id ? "リセット中..." : "リセット"}
+                    </button>
+                  </>
                 )}
               </div>
             </div>

@@ -12,9 +12,9 @@ export default async function DashboardPage() {
 
   const now = new Date();
 
-  // 受付中の募集期間
+  // 受付中の募集期間（日付に関係なく isOpen で判定）
   const openPeriods = await prisma.applicationPeriod.findMany({
-    where: { isOpen: true, endDate: { gte: now } },
+    where: { isOpen: true },
     orderBy: { month: "asc" },
   });
 
