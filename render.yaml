@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: hks-ticket
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        value: file:./dev.db
+      - key: AUTH_SECRET
+        value: hks-ticket-render-secret-key
+      - key: NODE_ENV
+        value: production

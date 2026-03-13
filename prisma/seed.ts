@@ -140,6 +140,19 @@ async function main() {
   });
   console.log("管理者アカウント作成完了");
 
+  // テストユーザー（西科 訓）
+  const testPassword = await bcrypt.hash("hks", 10);
+  await prisma.employee.upsert({
+    where: { employeeNo: "TEST01" },
+    update: {},
+    create: {
+      employeeNo: "TEST01",
+      name: "西科 訓",
+      password: testPassword,
+    },
+  });
+  console.log("テストユーザー（西科 訓）作成完了");
+
   // 職員データ
   const defaultPassword = await bcrypt.hash("password", 10);
   for (const emp of dummyEmployees) {
