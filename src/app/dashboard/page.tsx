@@ -37,11 +37,14 @@ export default async function DashboardPage() {
     orderBy: { game: { date: "asc" } },
   });
 
-  // 全試合日程（当選者情報付き）
+  // 全試合日程（当選者情報・申込者数付き）
   const allGames = await prisma.game.findMany({
     orderBy: { date: "asc" },
     include: {
       result: { include: { employee: true } },
+      firstChoiceApps: true,
+      secondChoiceApps: true,
+      thirdChoiceApps: true,
     },
   });
 
@@ -241,6 +244,7 @@ export default async function DashboardPage() {
                 month: g.month,
                 winner: g.result?.employee.name ?? null,
                 isMyWin: g.result?.employeeId === session.id,
+                applicantCount: g.firstChoiceApps.length + g.secondChoiceApps.length + g.thirdChoiceApps.length,
               }));
 
               const calendarPeriod = period

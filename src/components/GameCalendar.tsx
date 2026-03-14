@@ -11,6 +11,7 @@ type Game = {
   month: number;
   winner?: string | null;
   isMyWin?: boolean;
+  applicantCount?: number;
 };
 
 type Period = {
@@ -139,7 +140,12 @@ export default function GameCalendar({
                 <div className="font-bold text-base text-gray-800">
                   vs {game.opponent}
                 </div>
-                <div className="text-sm text-gray-400">{game.startTime}開始</div>
+                <div className="text-sm text-gray-400">
+                  {game.startTime}開始
+                  {game.applicantCount != null && game.applicantCount > 0 && (
+                    <span className="ml-2 text-orange-500">申込 {game.applicantCount}件</span>
+                  )}
+                </div>
               </div>
               {game.winner && (
                 <div className="shrink-0 text-right">
@@ -227,6 +233,11 @@ export default function GameCalendar({
                         <div className={`mt-0.5 text-sm ${game.isMyWin ? "text-blue-100" : "text-gray-400"}`}>
                           {game.startTime}〜
                         </div>
+                        {game.applicantCount != null && game.applicantCount > 0 && !game.winner && (
+                          <div className="mt-1 text-xs text-orange-500 font-medium">
+                            申込 {game.applicantCount}件
+                          </div>
+                        )}
                         {game.winner && (
                           <div className={`mt-1 text-xs truncate font-medium ${game.isMyWin ? "text-white" : "text-green-600"}`}>
                             {game.isMyWin ? "★ あなた" : game.winner}
